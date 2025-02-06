@@ -4,18 +4,27 @@ os.environ["USE_PYGEOS"] = "0"
 
 import re
 import time
+import yaml
 from pathlib import Path
 from pyogrio import read_dataframe
+import sys
 
-# Chemin dossier
-path_input = Path("D:/ign/parcellaire-express/unzip")
-path_output = Path("D:/ign/parcellaire-express/parquet/dep")
+# Charger la configuration
+with open("config.yaml", "r") as f:
+    config = yaml.safe_load(f)
 
+# Déterminer la source
+source = sys.argv[1] if len(sys.argv) > 1 else "ign_pci"
+if source not in config["sources"]:
+    raise ValueError(f"Source {source} non trouvée dans config.yaml")
 
-# Récupération des chemins des fichiers
-files_input = list(path_input.rglob("*/*/*/*/PARCELLE.shp"))
-files_output = [file_output.stem for file_output in path_output.glob("*-pci-parcelle-*")]
+# Définition des chemins pour la conversion départementale
+BASE_PATH = Path(config["base_path"])
+SOURCE_PATH = BASE_PATH / config["sources"][source]["relative_path"]
+INPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["unzip"]
+OUTPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["parquet_dep"]
 
+print(f"Conversion de {INPUT_PATH} vers {OUTPUT_PATH}")
 
 # Filtre des fichiers qui ne sont pas déjà converti
 files_filtered = [
@@ -44,7 +53,7 @@ for file in files_filtered:
     # Exportation des données
     start_time = time.time()
     df.to_parquet(
-        path = path_output / f"{date}-pci-{code_dep}.parquet",
+        path = path_output / f"{date}-pci-{code_dep}-parcelles.parquet",
         compression = "gzip")
     
     export_time = time.time() - start_time

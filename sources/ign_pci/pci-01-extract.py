@@ -2,11 +2,28 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import yaml
 from pathlib import Path
+import sys
 
-# Chemin
-path_url = "https://geoservices.ign.fr/parcellaire-express-pci"
-path_output = Path("D:/ign/parcellaire-express/zip/")
+# Charger la configuration
+with open("config.yaml", "r") as f:
+    config = yaml.safe_load(f)
+
+# Déterminer la source de données
+source = sys.argv[1] if len(sys.argv) > 1 else "ign_pci"
+if source not in config["sources"]:
+    raise ValueError(f"Source {source} non trouvée dans config.yaml")
+
+# Définition des chemins
+BASE_PATH = Path(config["base_path"])
+SOURCE_PATH = BASE_PATH / config["sources"][source]["relative_path"]
+URL = config["sources"][source]["url"]
+OUTPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["zip"]
+
+print(f"Téléchargement depuis : {URL}")
+print(f"Enregistrement dans : {OUTPUT_PATH}")
+
 
 # Scrapping de la page
 r = requests.get(path_url)

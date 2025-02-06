@@ -1,0 +1,19 @@
+base_path: "D:"  # Chemin de base commun
+
+sources:
+  ign_pci:
+    relative_path: "ign/parcellaire-express"
+    url: "https://geoservices.ign.fr/parcellaire-express-pci"
+    paths:
+      zip: "zip"
+      unzip: "unzip"
+      parquet_dep: "parquet/dep"
+      parquet_epci: "parquet/epci"
+
+  ign_bdtopo:
+    relative_path: "ign/bdtopo"
+    url: "https://geoservices.ign.fr/bdtopo"
+    paths:
+      zip: "zip"
+      unzip: "unzip"
+      parquet: "parquet"
