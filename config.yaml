@@ -16,4 +16,23 @@ sources:
     paths:
       zip: "zip"
       unzip: "unzip"
-      parquet: "parquet"
+      parquet_dep: "parquet/dep"
+      parquet_epci: "parcquet/epci"
+
+  ign_rnb:
+    relative_path: "ign/rnb"
+    url: "https://www.data.gouv.fr/api/1/datasets/65a5568dfc88169d0a5416ca"
+    paths:
+      zip: "zip"
+      unzip: "unzip"
+      parquet_dep: "parquet/dep"
+      parquet_epci: "parcquet/epci"
+
+  ign_gpu:
+    relative_path: "ign/gpu"
+    url: ""
+    paths:
+      zip: "zip"
+      unzip: "unzip"
+      parquet_dep: "parquet/dep"
+      parquet_epci: "parcquet/epci"

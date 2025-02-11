@@ -1,4 +1,3 @@
-# Importation des librairies
 import os
 os.environ["USE_PYGEOS"] = "0"
 
@@ -25,6 +24,9 @@ INPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["unzip"]
 OUTPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["parquet_dep"]
 
 print(f"Conversion de {INPUT_PATH} vers {OUTPUT_PATH}")
+
+files_input = list(INPUT_PATH.rglob("*/*/*/*/PARCELLE.shp"))
+files_output = [file_output.stem for file_output in OUTPUT_PATH.glob("*-parcelle-*")]
 
 # Filtre des fichiers qui ne sont pas déjà converti
 files_filtered = [
@@ -53,10 +55,11 @@ for file in files_filtered:
     # Exportation des données
     start_time = time.time()
     df.to_parquet(
-        path = path_output / f"{date}-pci-{code_dep}-parcelles.parquet",
+        path = OUTPUT_PATH / f"{date}-pci-{code_dep}-parcelles.parquet",
         compression = "gzip")
     
     export_time = time.time() - start_time
     
     print(f"--- Exportation OK en {export_time:.2f}s")
     print(f"--- Durée totale : {import_time + export_time:.2f}s\n")
+    

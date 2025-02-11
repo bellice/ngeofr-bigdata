@@ -24,9 +24,11 @@ OUTPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["zip"]
 print(f"Téléchargement depuis : {URL}")
 print(f"Enregistrement dans : {OUTPUT_PATH}")
 
+# Création du dossier de sortie s'il n'existe pas
+OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
 # Scrapping de la page
-r = requests.get(path_url)
+r = requests.get(URL)
 soup = BeautifulSoup(r.content, "html.parser")
 
 # Récupération de tous les liens à télécharger
@@ -36,13 +38,13 @@ for link in soup.find_all("a", attrs={"href": re.compile("^https://data.geopf.fr
 
 # Récupération des fichiers déjà téléchargés
 files = []
-for file in path_output.rglob("*7z"):
+for file in OUTPUT_PATH.rglob("*7z"):
     files.append(file.name)
 
 # Path(el).stem = récupère le nom du fichier sans l'extension
 # with_suffix(".7z") pour ajouter l'extension .7z au nom du fichier 
 # (path_output / Path(el).stem).with_suffix('.7z').exists() si le fichier existe
-links_filtered = [el for el in links if not (path_output / Path(el).stem).with_suffix(".7z").exists()]
+links_filtered = [el for el in links if not (OUTPUT_PATH / Path(el).stem).with_suffix(".7z").exists()]
 
 for link in links_filtered:
 
@@ -55,7 +57,7 @@ for link in links_filtered:
     print(f"Téléchargement de {file_name}")
 
     # Chemin de destination
-    file_dest = path_output / file_name
+    file_dest = OUTPUT_PATH / file_name
 
     # Téléchargement
     with open(file_dest, "wb") as f:
