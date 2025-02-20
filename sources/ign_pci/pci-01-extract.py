@@ -5,9 +5,26 @@ import re
 import yaml
 from pathlib import Path
 import sys
+import os
+from dotenv import load_dotenv
+
+# Trouver le chemin du fichier .env
+env_path = os.path.abspath(os.path.join(os.getcwd(), ".env"))
+print(f"Chargement de : {env_path}")  # Debug
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv(env_path)
+
+# Récupérer l'URL du proxy depuis le fichier .env
+proxy_url = os.getenv("PROXY_URL")
+print(f"Valeur de PROXY_URL : {proxy_url}")  # Debug pour vérifier que la variable est bien chargée
+
+# Définir le proxy pour les requêtes si disponible
+proxies = {"http": proxy_url, "https": proxy_url} if proxy_url else None
+
 
 # Charger la configuration
-with open("config.yaml", "r") as f:
+with open("config.yaml", "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 # Déterminer la source de données
@@ -28,7 +45,7 @@ print(f"Enregistrement dans : {OUTPUT_PATH}")
 OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
 # Scrapping de la page
-r = requests.get(URL)
+r = requests.get(URL, proxies=proxies)
 soup = BeautifulSoup(r.content, "html.parser")
 
 # Récupération de tous les liens à télécharger
@@ -49,7 +66,7 @@ links_filtered = [el for el in links if not (OUTPUT_PATH / Path(el).stem).with_s
 for link in links_filtered:
 
     # Envoie requête http
-    r = requests.get(link, headers={"User-Agent": "Custom"}, stream=True)
+    r = requests.get(link, headers={"User-Agent": "Custom"}, stream=True, proxies=proxies)
     print(f"Réponse du serveur : {r}")
 
     # Nom du fichier

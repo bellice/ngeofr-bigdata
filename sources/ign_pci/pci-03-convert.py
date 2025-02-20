@@ -9,7 +9,7 @@ from pyogrio import read_dataframe
 import sys
 
 # Charger la configuration
-with open("config.yaml", "r") as f:
+with open("config.yaml", "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 # Déterminer la source
@@ -22,6 +22,9 @@ BASE_PATH = Path(config["base_path"])
 SOURCE_PATH = BASE_PATH / config["sources"][source]["relative_path"]
 INPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["unzip"]
 OUTPUT_PATH = SOURCE_PATH / config["sources"][source]["paths"]["parquet_dep"]
+
+# Création du dossier de destination s'il n'existe pas
+OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
 print(f"Conversion de {INPUT_PATH} vers {OUTPUT_PATH}")
 

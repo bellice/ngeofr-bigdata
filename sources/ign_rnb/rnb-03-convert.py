@@ -13,7 +13,7 @@ from shapely import wkt
 import re
 
 # Charger la configuration
-with open("config.yaml", "r") as f:
+with open("config.yaml", "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 # Déterminer la source
@@ -47,6 +47,9 @@ for input_file in INPUT_PATH.glob("*.csv"):
     if output_file.exists():
         print(f"Le fichier {output_file} existe déjà. Skipping.")
         continue
+
+    # Création du dossier de destination s'il n'existe pas
+    OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
     print(f"Conversion de {input_file} vers {output_file}")
 

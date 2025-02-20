@@ -5,9 +5,26 @@ import sys
 from tqdm import tqdm
 from datetime import datetime
 import re
+import os
+from dotenv import load_dotenv
+
+# Trouver le chemin du fichier .env
+env_path = os.path.abspath(os.path.join(os.getcwd(), ".env"))
+print(f"Chargement de : {env_path}")  # Debug
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv(env_path)
+
+# Récupérer l'URL du proxy depuis le fichier .env
+proxy_url = os.getenv("PROXY_URL")
+print(f"Valeur de PROXY_URL : {proxy_url}")  # Debug pour vérifier que la variable est bien chargée
+
+# Définir le proxy pour les requêtes si disponible
+proxies = {"http": proxy_url, "https": proxy_url} if proxy_url else None
+
 
 # Charger la configuration
-with open("config.yaml", "r") as f:
+with open("config.yaml", "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 # Déterminer la source de données
@@ -28,7 +45,7 @@ OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
 # Récupération des informations du dataset
 try:
-    response = requests.get(URL_DATASET, headers={"User-Agent": "Custom"})
+    response = requests.get(URL_DATASET, headers={"User-Agent": "Custom"}, proxies=proxies)
     response.raise_for_status()
     dataset_info = response.json()
 
@@ -71,7 +88,7 @@ for res in files_to_download:
 
     # Téléchargement du fichier
     try:
-        with requests.get(file_url, headers={"User-Agent": "Custom"}, stream=True) as r:
+        with requests.get(file_url, headers={"User-Agent": "Custom"}, stream=True, proxies=proxies) as r:
             r.raise_for_status()
             total_size = int(r.headers.get("content-length", 0))
 

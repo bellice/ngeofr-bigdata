@@ -30,9 +30,8 @@ sources:
 
   ign_gpu:
     relative_path: "ign/gpu"
-    url: ""
+    url: "https://apicarto.ign.fr/api/gpu/zone-urba"
     paths:
-      zip: "zip"
-      unzip: "unzip"
+      parquet_raw: "parquet/raw"
       parquet_dep: "parquet/dep"
       parquet_epci: "parcquet/epci"
