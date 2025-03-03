@@ -30,8 +30,9 @@ try:
     resources = dataset_info.get("resources", [])
     print(f"{dataset_info['title']} - {len(resources)} ressources trouvées.\n")
 
+
     # Filtrer les ressources correspondant au format "RNB_<nombre>.csv.zip"
-    pattern = re.compile(r"RNB_(?!98)\d{2,3}\.csv\.zip$")
+    pattern = re.compile(r"RNB_(?!98)([\dAB]{2,3})\.csv\.zip$")
     files_to_download = [res for res in resources if pattern.search(res["url"].split("/")[-1])]
 
     if not files_to_download:

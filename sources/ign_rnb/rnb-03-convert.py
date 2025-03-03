@@ -32,7 +32,7 @@ for input_file in INPUT_PATH.glob("*.csv"):
     file_name = input_file.stem  # Nom du fichier sans extension
 
     # Extraction de la date (AAAA-MM) et du code département
-    match = re.search(r"(\d{4}-\d{2})-\d{2}_RNB_(\d{2,3})", file_name)
+    match = re.search(r"(\d{4}-\d{2})-\d{2}_RNB_([\dAB]{2,3})", file_name)
     if not match:
         print(f"Erreur : Format du fichier non reconnu pour {file_name}. Skipping.")
         continue

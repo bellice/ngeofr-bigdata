@@ -29,7 +29,7 @@ r = requests.get(URL, proxies=proxies)
 soup = BeautifulSoup(r.content, "html.parser")
 
 # Récupération de tous les liens à télécharger
-links = [link["href"] for link in soup.find_all("a", href=re.compile(r"^https://data\.geopf\.fr.*/BDTOPO_3-4_TOUSTHEMES_SHP.*_D\d{3}_.*"))]
+links = [link["href"] for link in soup.find_all("a", href=re.compile(r"^https://data\.geopf\.fr.*/BDTOPO_3-4_TOUSTHEMES_SHP.*_D([0-9]{2}[0-9|A-B])_.*"))]
 
 # Récupération des fichiers déjà téléchargés
 files = [file.name for file in OUTPUT_PATH.rglob("*7z")]

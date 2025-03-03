@@ -29,17 +29,21 @@ OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 print(f"Conversion de {INPUT_PATH} vers {OUTPUT_PATH}")
 
 files_input = list(INPUT_PATH.rglob("*/*/*/*/PARCELLE.shp"))
-files_output = [file_output.stem for file_output in OUTPUT_PATH.glob("*-parcelle-*")]
+files_output = [file_output.stem for file_output in OUTPUT_PATH.glob("*-parcelle.*")]
 
-# Filtre des fichiers qui ne sont pas déjà converti
+# Regex mise à jour pour gérer 001-101, 02A, 02B, 971-976
+regex_dept = re.compile(r"D(\d{2,3}[A-B]?)")  # Gère 02A, 02B, 971-976, 001-101
+
+# Extraction des départements existants dans files_output
+departments_output = {name.split('-')[3] for name in files_output}
+
 files_filtered = [
-    file
-    for file in files_input
-    if not any(re.search(r"_D([0-9]{2}[0-9|A-B])\\PARCELLE\.shp$", file.__str__()).group(1) in file_output
-               and re.search(r"(\d{4}-\d{2})", file.__str__()).group(1) in file_output
-                for file_output in files_output
-    )
+    file for file in files_input
+    if (match := regex_dept.search(str(file)))  # Vérifier si le fichier contient un département
+    and match.group(1) not in departments_output  # Garder uniquement les nouveaux départements
 ]
+
+
 
 for file in files_filtered:
 

@@ -17,7 +17,7 @@ sources:
       zip: "zip"
       unzip: "unzip"
       parquet_dep: "parquet/dep"
-      parquet_epci: "parcquet/epci"
+      parquet_epci: "parquet/epci"
 
   ign_rnb:
     relative_path: "ign/rnb"
@@ -35,3 +35,15 @@ sources:
       parquet_raw: "parquet/raw"
       parquet_dep: "parquet/dep"
       parquet_epci: "parcquet/epci"
+
+  brgm_ssp:
+    relative_path: "brgm/ssp"
+    url: "https://georisques.gouv.fr/api/v1/ssp"
+    paths:
+      parquet_raw: "parquet/dep"
+
+  brgm_icpe:
+    relative_path: "brgm/icpe"
+    url: "https://georisques.gouv.fr/api/v1/installations_classees"
+    paths:
+      parquet_raw: "parquet/dep"

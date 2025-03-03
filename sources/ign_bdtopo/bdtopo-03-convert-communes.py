@@ -28,8 +28,8 @@ OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
 print(f"Conversion de {INPUT_PATH} vers {OUTPUT_PATH}")
 
-files_input = list(INPUT_PATH.rglob("*/*/*/*/TRONCON_DE_VOIE_FERREE.shp"))
-files_output = [file_output.stem for file_output in OUTPUT_PATH.glob("*-troncons-voie-ferree.*")]
+files_input = list(INPUT_PATH.rglob("*/*/*/*/COMMUNE.shp"))
+files_output = [file_output.stem for file_output in OUTPUT_PATH.glob("*-communes.*")]
 
 # Regex mise à jour pour gérer 001-101, 02A, 02B, 971-976
 regex_dept = re.compile(r"D(\d{2,3}[A-B]?)")  # Gère 02A, 02B, 971-976, 001-101
@@ -46,7 +46,7 @@ files_filtered = [
 
 for file in files_filtered:
 
-    code_dep = re.search(r"_D([0-9]{2}[0-9|A-B]).*\\TRONCON_DE_VOIE_FERREE\.shp$", file.__str__()).group(1)
+    code_dep = re.search(r"_D([0-9]{2}[0-9|A-B]).*\\COMMUNE\.shp$", file.__str__()).group(1)
     date = re.search(r"(\d{4}-\d{2})", file.__str__()).group(1)
     print(f"Département {code_dep}, millésime {date}")
 
@@ -61,7 +61,7 @@ for file in files_filtered:
     # Exportation des données
     start_time = time.time()
     df.to_parquet(
-        path = OUTPUT_PATH / f"{date}-bdtopo-{code_dep}-troncons-voie-ferree.parquet",
+        path = OUTPUT_PATH / f"{date}-bdtopo-{code_dep}-communes.parquet",
         compression = "gzip")
     
     export_time = time.time() - start_time
